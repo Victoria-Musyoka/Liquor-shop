@@ -42,7 +42,15 @@ const Logo = styled.h1`
   text-align: center;
 `;
 
-  const Header = ({liquorCount}) => {
+  const Header = ({liquorCount, user,setUser} ) => {
+
+    const handleLogoutButton = () => {
+      fetch("/logout", { method: "DELETE" }).then((r) => {
+        if (r.ok) {
+          setUser(null);
+        }
+      });
+    };
 
   
   return (
@@ -59,14 +67,25 @@ const Logo = styled.h1`
     
         
         </MenuItem1>
-        <MenuItem1>
+        {user ? (
+              <MenuItem1>
+              <button className="huma" style={{ margin:" 0 1rem 0 0",textDecoration:"none" ,border:"1px solid black",padding:"1px"}} onClick={handleLogoutButton}>Logout</button>
+          
+              
+              </MenuItem1>
+        )
+      :(
+        <MenuItem>
         <button className="regi" style={{ margin:" 0 1rem 0 0",textDecoration:"none" ,border:"1px solid black",padding:"1px"}}><Link to="/register">Register</Link></button>
     
         
-        </MenuItem1>
-        <MenuItem>
+        
         <button className="sigi" style={{ margin:" 0 1rem 0 0",textDecoration:"none" ,border:"1px solid black",padding:"1px"}}><Link to = "/signin">Sign in</Link></button>
         </MenuItem>
+      )
+      }
+    
+    
       </Right>
         
      

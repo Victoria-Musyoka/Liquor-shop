@@ -10,14 +10,23 @@ import { Route, Routes } from "react-router-dom";
 
 const App = (liquorCount) => {
   const [liquor, setLiquor] = useState([]);
+  const [user, setUser] = useState(null);
 
- 
+  useEffect(() => {
+    // auto-login
+    fetch("/me").then((r) => {
+      if (r.ok) {
+        r.json().then((user) => setUser(user));
+      }
+    });
+  }, []);
 
   useEffect(()=>{
     fetch("/liquors")
     .then((r)=>r.json())
     .then(setLiquor)
     // 
+    // setLiquor
     // 
 },[])
 
@@ -42,15 +51,25 @@ const App = (liquorCount) => {
   return (
     <>
     
-      <Header liquorCount={liquor.length} /> 
-     
-
+      <Header liquorCount={liquor.length} user={user} setUser={setUser} /> 
+     {user ? (
       <Routes>
-    <Route exact path="/" element={<Home onAddLiquor={handleAddLiquor} liquor={liquor} onUpdateLiquor={handleUpdateLiquor} onDeleteLiquor={handleDeleteLiquor}/>} />
-    <Route exact path="/signin" element={<Signin/>} />
+       <Route exact path="/" element={<Home onAddLiquor={handleAddLiquor} liquor={liquor} onUpdateLiquor={handleUpdateLiquor} onDeleteLiquor={handleDeleteLiquor}/>} />
+       </Routes>
+     )
+     :
+     (
+      <Routes>
+    {/* <Route exact path="/" element={<Home />} /> */}
+    <Route exact path="/signin" element={<Signin setUser={setUser}/>} />
     <Route exact path="/register" element={<Register/>} />
+    
   
   </Routes> 
+     )
+    }
+
+
     </>
   )
  }
